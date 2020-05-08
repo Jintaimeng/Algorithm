@@ -1,7 +1,3 @@
-//
-// Created by 92935 on 2020/4/30.
-//
-
 #ifndef ALGORITHM_STUDENT_H
 #define ALGORITHM_STUDENT_H
 #include <string>
@@ -13,9 +9,10 @@ struct Student{
         return score != otherStudent.score ? score < otherStudent.score : name < otherStudent.name;
     }
     friend ostream& operator<<(ostream &ostream, const Student student){
-        os<<"Student: "<<student.name<<" "<<student.score<<endl;
-        return os;
+        ostream<<"Student: "<<student.name<<" "<<student.score<<endl;
+        return ostream;
     }
 
 };
 #endif //ALGORITHM_STUDENT_H
+
