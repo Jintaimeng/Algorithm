@@ -84,6 +84,36 @@ private:
 			count --;
 		}
 	}
+	Node* minimum(Node *node){
+		if(node->left == NULL)
+			return node;
+		return minimum(node->left);
+	}
+	Node* maximum(Node *node){
+		if(node->right == NULL)
+			return node;
+		return maximum(node->right);
+	}
+	Node* removeMin(Node* node){
+		if(node->left == NULL){
+			Node* rightNode = node->right;
+			delete node;
+			count --;
+			return rightNode;
+		}
+		node->left = removeMin(node->left);
+		return node;
+	}
+	Node* removeMax(Node* node){
+		if(node->right == NULL){
+			Node* leftNode = node->left;
+			delete node;
+			count --;
+			return leftNode;
+		}
+		node->right = removeMin(node->right);
+		return node;
+	}
 public:
 	BST(){
 		root = NULL;
@@ -129,6 +159,28 @@ public:
 			if( node->right ){
 				q.push(node->right);
 			}
+		}
+	}
+	//寻找最小的键值
+	Key minimum(){
+		assert( count!= 0);
+		Node* minNode = minimum( root );
+		return minNode->key;
+	} 
+	//寻找最大的键值
+	Key maximum(){
+		assert( count!= 0);
+		Node* maxNode = maximum( root );
+		return maxNode->key;
+	} 
+	void removeMin(){
+		if(root){
+			root = removeMin(root);
+		}
+	}
+	void removeMax(){
+		if(root){
+			root = removeMax(root);
 		}
 	}
 };
