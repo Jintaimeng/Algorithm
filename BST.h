@@ -54,12 +54,44 @@ private:
 		else
 			return search(node->right, key);
 	}
+	void preOrder(Node* node){
+		if(node != NULL){
+			cout<<node->key<<endl;
+			preOrder(node->left);
+			preOrder(node->right);
+		}
+	}
+	void inOrder(Node* node){
+		if(node != NULL){			
+			inOrder(node->left);
+			cout<<node->key<<endl;
+			inOrder(node->right);
+		}
+	}
+	void postOrder(Node* node){
+		if(node != NULL){			
+			postOrder(node->left);
+			postOrder(node->right);
+			cout<<node->key<<endl;
+		}
+	}
+	void destroy(Node *node){
+		if(node != NULL){
+			destroy(node->left);
+			destroy(node->right);
+			
+			delete node;
+			count --;
+		}
+	}
 public:
 	BST(){
 		root = NULL;
 		count = 0;
 	}
-	
+	~BST(){
+		destroy(root);
+	}
 	int size(){
 		return count;
 	}
@@ -75,4 +107,14 @@ public:
 	Value* search(Key key){
 		return search(root, key);
 	}
+	void preOrder(){
+		preOrder(root);
+	}
+	void inOrder(){
+		inOrder(root);
+	}
+	void postOrder(){
+		postOrder(root);
+	}
+	 
 };
