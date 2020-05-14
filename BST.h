@@ -13,6 +13,12 @@ private:
 			this->value = value;
 			this->left = this->right = NULL;
 		}
+		Node(Node *node){
+			this->key = node->key;
+			this->value = node->value;
+			this->left = node->left;
+			this->right = node->right;
+		}
 	};
 	Node *root;
 	int count;
@@ -44,7 +50,7 @@ private:
 		else
 			return contain(node->right, key);
 	}
-	Value* search(Node* node, Key key){
+	Value* search(Node *node, Key key){
 		if(node == NULL)
 			return NULL;
 		if(node->key == key)
@@ -54,21 +60,21 @@ private:
 		else
 			return search(node->right, key);
 	}
-	void preOrder(Node* node){
+	void preOrder(Node *node){
 		if(node != NULL){
 			cout<<node->key<<endl;
 			preOrder(node->left);
 			preOrder(node->right);
 		}
 	}
-	void inOrder(Node* node){
+	void inOrder(Node *node){
 		if(node != NULL){			
 			inOrder(node->left);
 			cout<<node->key<<endl;
 			inOrder(node->right);
 		}
 	}
-	void postOrder(Node* node){
+	void postOrder(Node *node){
 		if(node != NULL){			
 			postOrder(node->left);
 			postOrder(node->right);
@@ -94,7 +100,7 @@ private:
 			return node;
 		return maximum(node->right);
 	}
-	Node* removeMin(Node* node){
+	Node* removeMin(Node *node){
 		if(node->left == NULL){
 			Node* rightNode = node->right;
 			delete node;
@@ -104,7 +110,7 @@ private:
 		node->left = removeMin(node->left);
 		return node;
 	}
-	Node* removeMax(Node* node){
+	Node* removeMax(Node *node){
 		if(node->right == NULL){
 			Node* leftNode = node->left;
 			delete node;
@@ -113,6 +119,40 @@ private:
 		}
 		node->right = removeMin(node->right);
 		return node;
+	}
+	Node* remove(Node *node, Key key){
+		if(node == NULL)
+			return NULL;
+		if(key < node->key){
+			node->left = remove(node->left, key);
+			return node;
+		}
+		else if(key > node->key){
+			node->right = remove(node->right, key);
+			return node;
+		}
+		else{
+			if(node->left == NULL){
+				Node* rightNode = node->right;
+				delete node;
+				count --;
+				return rightNode;
+			}
+			if(node->right == NULL){
+				Node* leftnode = node->left;
+				delete node;
+				count --;
+				return leftNode;
+			}
+			
+			Node *successor = new Node(minimun(node->right));
+			count ++;
+			successor->right = removeMin(node->right);
+			successor->left = node->left;
+			delete node;
+			count --;
+			return successor;
+		}
 	}
 public:
 	BST(){
@@ -182,5 +222,8 @@ public:
 		if(root){
 			root = removeMax(root);
 		}
+	}
+	void remove(Key key){
+		root = remove(root, key);
 	}
 };
