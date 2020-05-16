@@ -1,3 +1,5 @@
+#include <vector>
+
 using namespace std;
 //³íÃÜÍ¼--ÁÚ½Ó¾ØÕó 
 class DenseGraph{

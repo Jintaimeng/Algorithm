@@ -1,10 +1,13 @@
+#include <vector>
+
 using namespace std;
 //稀疏图--邻接表 
 class SparseGraph{
+private:
 	int n, m;
 	bool directed;
-	vector<vector<int>> g;
-	
+	vector< vector<int> > g;
+public:
 	SparseGraph(int n, bool directed){
 		this->n = n;
 		this->m = 0;
@@ -40,4 +43,36 @@ class SparseGraph{
 		}
 		return false;
 	}
+	
+	class adjIterator{
+	private:
+		SparseGraph &G;
+		int v;
+		int index;//指示当前迭代到哪里了 
+		
+	public:
+		adjIterator(SparseGraph &graph, int v): G(graph){
+			this->v = v;
+			this->index = 0;
+		}
+		
+		int begin(){
+			index = 0;
+			if( G.g[v].size() ){
+				return G.g[v][index];
+			}
+			return -1;
+		}
+		int next(){
+			index ++;
+			if(index < G.g[v].size()){
+				return G.g[v][index];
+			} 
+			return -1;
+		}
+		bool end(){
+			return index >= G.g[v].size();
+		}
+		
+	};
 };
