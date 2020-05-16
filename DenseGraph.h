@@ -7,7 +7,7 @@ class DenseGraph{
 private:
 	int n, m;
 	bool directed;
-	vector<vector<bool>> g;
+	vector< vector<bool> > g;
 	
 public:
 	DenseGraph(int n, bool directed){
@@ -44,4 +44,32 @@ public:
 		assert( w>=0&&w<n );
 		return g[v][w];
 	}
+	
+	class adjIterator{
+	private:
+		DenseGraph &G;
+		int v;
+		int index;
+		
+	public:
+		adjIterator(DenseGraph &graph, int v): G(graph){
+			this->v = v;
+			this->index = -1;
+		}
+		int begin(){
+			index = -1;
+			return next();
+		}
+		int next(){
+			for( index+=1 ; index < G.V() ; index ++){
+				if( G.g[v][index] )
+					return index;
+			}
+			return -1;
+		}
+		bool end(){
+			return index >= G.V();
+		}
+		
+	};
 };

@@ -14,6 +14,7 @@
 //#include "BST.h"
 
 #include "SparseGraph.h"
+#include "DenseGraph.h"
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
 int main(int argc, char** argv) {
@@ -74,7 +75,7 @@ int main(int argc, char** argv) {
 	int N = 10;
 	int M = 50;
 	srand(time(NULL));
-	
+	//Sparse Graph
 	SparseGraph g1(N, false);
 	for(int i = 0 ; i < M ; i ++){
 		int a = rand()%N;
@@ -89,6 +90,20 @@ int main(int argc, char** argv) {
 		}
 		cout<<endl;
 	}
-	
+	//Dense Graph
+	DenseGraph g2(N, false);
+	for(int i = 0 ; i < M ; i ++){
+		int a = rand()%N;
+		int b = rand()%N;
+		g2.addEdge(a, b);
+	}
+	for(int v = 0 ; v < M ; v ++){
+		cout<<v<<" : ";
+		DenseGraph::adjIterator adj(g2, v);
+		for( int w = adj.begin() ; !adj.end() ; w = adj.next() ){
+			cout<<w<<" ";
+		}
+		cout<<endl;
+	}
 	return 0;
 }
