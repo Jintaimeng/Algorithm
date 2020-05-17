@@ -1,13 +1,15 @@
 #include <vector>
-
+#include "Edge.h"
 using namespace std;
 //≥Ì√‹Õº--¡⁄Ω”æÿ’Û 
+
+template<typename Weight>
 class DenseGraph{
 	
 private:
 	int n, m;
 	bool directed;
-	vector< vector<bool> > g;
+	vector< vector<Edge<Weight> *> > g;
 	
 public:
 	DenseGraph(int n, bool directed){
@@ -15,11 +17,16 @@ public:
 		this->m = 0;
 		this->directed = directed;
 		for(int i = 0 ; i < n ; i ++){
-			g.push_back( vector<bool>(n, false) );
+			g.push_back( vector<Edge<Weight> *>(n, NULL) );
 		}
 	}
 	~DenseGraph(){
-		
+		for(int i = 0 ; i < n ; i ++){
+			for(int j = 0 ; j < n ; j ++){
+				if( g[i][j] != NULL )
+					delete g[i][j];
+			}
+		}
 	}
 	int V(){
 		return n;
@@ -27,14 +34,19 @@ public:
 	int E(){
 		return m;
 	}
-	void addEdge(int v, int w){
+	void addEdge(int v, int w, Weight weight){
 		assert( v>=0&&v<n );
 		assert( w>=0&&w<n );
-		if( hasEdge( v, w ) )
+		if( hasEdge( v, w ) ){
+			delete g[v][w];
+			if( !directed )
+				delete[w][v];
+			m --;
+		}
 			return;
-		g[v][w] = true;
+		g[v][w] = new Edge<Weight>(v, w, weight);
 		if( !directed ){
-			g[w][v] = true;
+			g[w][v] = new Edge<Weight>(w, v, weight);
 		}
 		
 		m ++;
@@ -42,9 +54,19 @@ public:
 	bool hasEdge(int v, int w){
 		assert( v>=0&&v<n );
 		assert( w>=0&&w<n );
-		return g[v][w];
+		return g[v][w] != NULL;
 	}
-	
+	void show(){
+		for(int i = 0 ; i < n ; i ++){
+			for(int j = 0 ; j < n ; j ++){
+				if( g[i][j] )
+					cout<<g[i][j]->wt()<<"\t";
+				else
+					cout<<"NULL\t";
+			}
+			cout<<endl;
+		}
+	}
 	class adjIterator{
 	private:
 		DenseGraph &G;
@@ -56,16 +78,16 @@ public:
 			this->v = v;
 			this->index = -1;
 		}
-		int begin(){
+		Edge<Weight>* begin(){
 			index = -1;
 			return next();
 		}
-		int next(){
+		Edge<Weight>* next(){
 			for( index+=1 ; index < G.V() ; index ++){
 				if( G.g[v][index] )
-					return index;
+					return G.g[v][index];
 			}
-			return -1;
+			return NULL;
 		}
 		bool end(){
 			return index >= G.V();
